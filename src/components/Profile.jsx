@@ -153,7 +153,9 @@ export default function Profile() {
     <div>
       <h3>User Profile Management</h3>
       <div style={{ marginBottom: "12px", display: "flex", gap: "12px" }}>
-        <Link to="/users">Go to User Management</Link>
+        <Link to="/users">
+          <button>Go to User Management</button>
+        </Link>
         <button onClick={logout}>Logout</button>
       </div>
       {isLoading ? (
