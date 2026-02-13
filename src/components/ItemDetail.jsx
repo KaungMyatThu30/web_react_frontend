@@ -1,20 +1,22 @@
-import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
-export function ItemDetail() {
+import { useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+export default function ItemDetail() {
   const { id } = useParams();
   const itemNameRef = useRef();
   const itemCategoryRef = useRef();
   const itemPriceRef = useRef();
+  const navigate = useNavigate();
+
   async function loadItem() {
     const uri = `http://localhost:3000/api/item/${id}`;
-    console.log("==> uri: ", uri);
     const result = await fetch(uri);
     const data = await result.json();
-    console.log("==> data :", data);
     itemNameRef.current.value = data.itemName;
     itemCategoryRef.current.value = data.itemCategory;
     itemPriceRef.current.value = data.itemPrice;
   }
+
   async function onUpdate() {
     const body = {
       name: itemNameRef.current.value,
@@ -22,18 +24,20 @@ export function ItemDetail() {
       price: itemPriceRef.current.value,
     };
     const uri = `http://localhost:3000/api/item/${id}`;
-    console.log("==> uri: ", uri);
     const result = await fetch(uri, {
       method: "PATCH",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (result.status == 200) {
-      loadItem();
+    if (result.ok) {
+      navigate("/items");
     }
   }
+
   useEffect(() => {
     loadItem();
   }, []);
+
   return (
     <div>
       <table>
@@ -45,7 +49,7 @@ export function ItemDetail() {
             </td>
           </tr>
           <tr>
-            <th style={{ textAlign: "left" }}>Categoery</th>
+            <th style={{ textAlign: "left" }}>Category</th>
             <td style={{ textAlign: "left", paddingLeft: "20px" }}>
               <select ref={itemCategoryRef}>
                 <option>Stationary</option>
@@ -63,7 +67,7 @@ export function ItemDetail() {
         </tbody>
       </table>
       <hr />
-      <button onClick={onUpdate}>update</button>
+      <button onClick={onUpdate}>Update</button>
     </div>
   );
 }

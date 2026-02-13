@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-export function Items() {
+export default function Items() {
   const [items, setItems] = useState([]);
   const itemNameRef = useRef();
   const itemCategoryRef = useRef();
